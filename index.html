@@ -1,178 +1,244 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declaración de Amor</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8bbd0; /* Fondo rosado */
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Declaración de Amor</title>
+  <style>
+    :root{
+      --rose:#f8bbd0; --accent:#d81b60;
+      --yes:#4caf50; --yes-hover:#388e3c;
+      --no:#f44336;  --no-hover:#d32f2f;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100svh; display:grid; place-items:center;
+      background:var(--rose); font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      overflow:hidden;
+    }
+    /* Fondo de corazones */
+    .hearts{
+      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+    }
+    .hearts span{
+      position:absolute; bottom:-60px; font-size:clamp(18px,3.5vw,28px);
+      filter:drop-shadow(0 4px 6px rgba(0,0,0,.15));
+      animation:floatUp linear var(--dur) infinite;
+      opacity:.9;
+    }
+    .hearts span::selection{background:transparent}
+    @keyframes floatUp{
+      from{ transform:translateY(0) translateX(0) rotate(0deg); opacity:.92; }
+      to{ transform:translateY(-120vh) translateX(var(--dx)) rotate(360deg); opacity:.1; }
+    }
 
-        #container {
-            text-align: center;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            width: 80%;  /* Ancho ajustado al 80% de la pantalla */
-            max-width: 600px; /* Ancho máximo */
-            transition: transform 0.3s ease-in-out;
-        }
-
-        #container:hover {
-            transform: scale(1.05); /* Efecto de hover en el contenedor */
-        }
-
-        h1 {
-            font-size: 32px;
-            color: #d81b60;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        p {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        #buttons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap; /* Hace que los botones se ajusten a pantallas pequeñas */
-        }
-
-        button {
-            margin: 10px;
-            padding: 15px 25px;
-            font-size: 18px;
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #btnYes {
-            background-color: #4CAF50;
-        }
-
-        #btnYes:hover {
-            background-color: #388e3c;
-            transform: translateY(-5px);
-        }
-
-        #btnNo {
-            background-color: #f44336;
-        }
-
-        #btnNo:hover {
-            background-color: #d32f2f;
-            transform: translateY(-5px);
-        }
-
-        /* Animación para mover el botón "No" */
-        @keyframes moveNo {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(200px, 150px); }
-            50% { transform: translate(-200px, -150px); }
-            75% { transform: translate(100px, -250px); }
-            100% { transform: translate(-150px, 200px); }
-        }
-
-        .noMoving {
-            animation: moveNo 1.5s infinite ease-in-out;
-        }
-
-        img {
-            width: 100%;
-            max-width: 350px;
-            margin-bottom: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        audio {
-            margin-top: 30px;
-            border-radius: 5px;
-        }
-
-        /* Ajustes para pantallas pequeñas */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 28px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            button {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-        }
-    </style>
+    #container{
+      position:relative; text-align:center; padding:28px;
+      background:rgba(255,255,255,.86); border-radius:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.18); width:min(90%,640px);
+      transition:transform .25s ease;
+    }
+    #container:hover{transform:translateY(-2px)}
+    h1{
+      margin:12px 0 8px; font-size:clamp(24px,4.5vw,34px);
+      color:var(--accent); text-transform:uppercase; letter-spacing:.5px;
+    }
+    p{ margin:8px 0 18px; font-size:clamp(15px,2.8vw,18px); color:#333; line-height:1.5; }
+    img{
+      width:100%; max-width:360px; border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.22); display:block; margin:0 auto 16px;
+    }
+    #buttons{
+      position:relative; display:flex; justify-content:center; align-items:center;
+      gap:14px 20px; flex-wrap:wrap; min-height:56px; margin-top:10px; padding:10px 0;
+    }
+    button{
+      padding:14px 24px; font-size:18px; color:#fff; border:0; border-radius:999px; cursor:pointer;
+      transition:transform .18s ease, background-color .18s ease, box-shadow .18s ease, opacity .18s ease;
+      box-shadow:0 6px 12px rgba(0,0,0,.12); touch-action:none; user-select:none;
+    }
+    #btnYes{background:var(--yes)}
+    #btnYes:hover{background:var(--yes-hover); transform:translateY(-2px)}
+    #btnNo{background:var(--no)}
+    #btnNo:hover{background:var(--no-hover); transform:translateY(-2px)}
+    audio{ margin-top:18px; width:100%; max-width:360px; }
+    /* Canvas de confeti (no estorba clics) */
+    #fx{ position:fixed; inset:0; pointer-events:none; }
+    @media (max-width:600px){ button{font-size:16px; padding:12px 20px;} }
+  </style>
 </head>
 <body>
-    <div id="container">
-        <!-- Imagen de fondo de la declaración -->
-        <img src="img/declara.webp" alt="Imagen de declaración de amor">
+  <!-- Fondo corazones -->
+  <div class="hearts" id="hearts"></div>
+  <!-- Confeti -->
+  <canvas id="fx"></canvas>
 
-        <h1>¿Quieres ser mi novia?</h1>
-        <p>Solo quería decirte algo que me guardé por un tiempo... Me gustas, y cada día que te veo, me gustas un poquito más.No puedo dejar de pensar en lo bien que la pasamos juntos. Me encanta nuestra conexión y todo lo que compartimos. ¿Te gustaría dar un paso más y ser mi novia? Creo que sería genial explorar lo que podemos construir juntos.
- ❤️</p>
+  <div id="container" aria-live="polite">
+    <img src="img/declara.webp" alt="Imagen de declaración de amor">
+    <h1>¿Quieres ser mi novia?</h1>
+    <p>
+      Solo quería decirte algo que me guardé por un tiempo... Me gustas, y cada día que te veo,
+      me gustas un poquito más. No puedo dejar de pensar en lo bien que la pasamos juntos.
+      Me encanta nuestra conexión y todo lo que compartimos. ¿Te gustaría dar un paso más y ser mi novia?
+      Creo que sería genial explorar lo que podemos construir juntos. ❤️
+    </p>
 
-        <div id="buttons">
-            <!-- Botón Sí con la redirección a la página de agradecimiento -->
-            <button id="btnYes" onclick="window.location.href = 'opcionci.html'">Sí</button>
-            <!-- Botón No que se mueve -->
-            <button id="btnNo">No</button>
-        </div>
-
-        <!-- Reproductor de audio -->
-        <audio id="" controls>
-            <source src="audio/subite.mp3" type="audio/mp3">
-            Tu navegador no soporta el formato de audio.
-        </audio>
+    <div id="buttons">
+      <button id="btnYes" type="button">Sí</button>
+      <button id="btnNo"  type="button" aria-label="No">No</button>
     </div>
 
-    <script>
-        const btnNo = document.getElementById("btnNo");
+    <audio controls>
+      <source src="audio/subite.mp3" type="audio/mp3">
+      Tu navegador no soporta el formato de audio.
+    </audio>
+  </div>
 
-        // PC: cuando pasas el mouse
-        btnNo.addEventListener("mouseover", mueveBotonNo);
+  <script>
+    // ---------- Elementos ----------
+    const btnYes = document.getElementById('btnYes');
+    const btnNo  = document.getElementById('btnNo');
+    const fx     = document.getElementById('fx');
+    const ctx    = fx.getContext('2d');
+    const heartsBox = document.getElementById('hearts');
 
-        // Celulares: cuando intentas tocarlo
-        btnNo.addEventListener("touchstart", mueveBotonNo);
+    // ---------- Utilidades ----------
+    function fitCanvas(){
+      fx.width  = window.innerWidth;
+      fx.height = window.innerHeight;
+    }
+    window.addEventListener('resize', fitCanvas, {passive:true});
+    fitCanvas();
 
-        // Acción cuando sí logran hacer clic en "No"
-        btnNo.addEventListener("click", accionNo);
+    // ---------- Sonido "pop" sin archivos (Web Audio) ----------
+    let audioCtx;
+    function pop(){
+      try{
+        audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.value = 880; // inicio
+        o.connect(g); g.connect(audioCtx.destination);
+        g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
+        o.start();
+        o.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.12);
+        o.stop(audioCtx.currentTime + 0.13);
+      }catch(e){/* silencioso */}
+    }
 
-        function mueveBotonNo() {
-            btnNo.classList.add("noMoving");
+    // ---------- Botón NO que huye (PC + móvil) ----------
+    let isEscaping = false;
+    function moveNoSafely(){
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const r  = btnNo.getBoundingClientRect();
+      const m  = 12; // margen seguro
+      const maxL = vw - r.width  - m;
+      const maxT = vh - r.height - m;
+      const left = Math.floor(Math.random() * (maxL - m + 1)) + m;
+      const top  = Math.floor(Math.random() * (maxT - m + 1)) + m;
+
+      btnNo.style.position = 'fixed';
+      btnNo.style.transition = 'left .14s ease, top .14s ease, transform .14s ease, opacity .2s ease';
+      btnNo.style.left = left + 'px';
+      btnNo.style.top  = top  + 'px';
+      pop(); // sonidito al escapar
+    }
+    ['pointerenter','pointerdown','pointermove'].forEach(evt=>{
+      btnNo.addEventListener(evt, (e)=>{
+        if(!isEscaping){
+          isEscaping = true;
+          moveNoSafely();
+          setTimeout(()=>{ isEscaping = false; }, 110);
+        }else{
+          moveNoSafely();
         }
+        e.preventDefault();
+      }, {passive:false});
+    });
+   
 
-        function accionNo() {
-            alert("¡Te lo agradezco mucho! 😢💕");
-            btnNo.classList.remove("noMoving");
-            btnNo.style.opacity = 0; // Desaparece el botón
+    // ---------- Confeti al decir SÍ ----------
+    const confetti = [];
+    function burstConfetti(x, y, n=180){
+      for(let i=0;i<n;i++){
+        confetti.push({
+          x, y,
+          vx:(Math.random()*2-1)*6,
+          vy:(Math.random()*-1-0.5)*8,
+          g: 0.18 + Math.random()*0.1,
+          s: 2 + Math.random()*3,
+          life: 60 + Math.random()*40,
+          rot: Math.random()*Math.PI*2,
+          vr: (Math.random()*2-1)*0.2,
+          // colores base (deja que el navegador asigne por defecto si prefieres)
+          color:`hsl(${Math.floor(Math.random()*360)} 90% 55%)`
+        });
+      }
+      animate();
+    }
+    let animId=null;
+    function animate(){
+      if(animId) return; // evita duplicados
+      function frame(){
+        ctx.clearRect(0,0,fx.width,fx.height);
+        for(let i=confetti.length-1;i>=0;i--){
+          const p = confetti[i];
+          p.vy += p.g;
+          p.x  += p.vx;
+          p.y  += p.vy;
+          p.rot+= p.vr;
+          p.life--;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.s, -p.s, p.s*2, p.s*2);
+          ctx.restore();
+          if(p.life<=0 || p.y>fx.height+30) confetti.splice(i,1);
         }
-    </script>
+        if(confetti.length>0){
+          animId = requestAnimationFrame(frame);
+        }else{
+          animId = null; ctx.clearRect(0,0,fx.width,fx.height);
+        }
+      }
+      animId = requestAnimationFrame(frame);
+    }
+    btnYes.addEventListener('click', (e)=>{
+      // feedback visual
+      btnYes.style.transform='scale(1.06)';
+      // confeti desde el botón
+      const r = btnYes.getBoundingClientRect();
+      const cx = r.left + r.width/2;
+      const cy = r.top  + r.height/2;
+      burstConfetti(cx, cy);
+      setTimeout(()=>{ window.location.href='opcionci.html'; }, 700);
+    });
+
+    // ---------- Generador de corazones flotantes ----------
+    function spawnHearts(){
+      const count = 14; // cantidad simultánea
+      for(let i=0;i<count;i++){
+        const sp = document.createElement('span');
+        sp.textContent = Math.random()<0.85 ? '❤' : '💖';
+        const left = Math.random()*100;
+        sp.style.left = left + 'vw';
+        sp.style.setProperty('--dx', (Math.random()*80-40)+'px'); // deriva lateral
+        sp.style.setProperty('--dur', (10+Math.random()*10)+'s');
+        heartsBox.appendChild(sp);
+        // limpiar cuando termina un ciclo
+        sp.addEventListener('animationend', ()=> sp.remove());
+        // espaciado de salida
+        setTimeout(()=>sp.remove(), 22000);
+      }
+    }
+    // Emitimos grupos de corazones cada cierto tiempo
+    const heartsTimer = setInterval(spawnHearts, 1400);
+    // primer lote
+    spawnHearts();
+  </script>
 </body>
 </html>
 

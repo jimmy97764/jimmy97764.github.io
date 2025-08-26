@@ -1,102 +1,169 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gracias por aceptar ser mi novia</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            background-color: #f8bbd0; /* Fondo rosado */
-            font-family: Arial, sans-serif;
-            color: #fff;
-            background-image: url('imagenes/fondo-agradecimiento.jpg'); /* Imagen de fondo */
-            background-size: cover;
-            background-position: center;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gracias por aceptar ser mi novia</title>
+  <style>
+    :root{
+      --bg1:#f48fb1;
+      --bg2:#ce93d8;
+      --bg3:#81d4fa;
+      --accent:#ad1457;
+      --text:#212121;
+      --white:#ffffff;
+      --shadow:0 8px 22px rgba(0,0,0,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
 
-        h1 {
-            font-size: 36px;
-            color: #d81b60;
-        }
+    body{
+      margin:0; min-height:100svh; display:grid; place-items:center;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+      background-size:400% 400%;
+      animation: gradientMove 15s ease infinite;
+      overflow:hidden;
+    }
+    @keyframes gradientMove {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
 
-        p {
-            font-size: 18px;
-            text-align: center;
-            color: #fff;
-            margin-bottom: 30px;
-        }
+    /* Corazones flotando */
+    .hearts{
+      position:fixed; inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:-1;
+    }
+    .hearts span{
+      position:absolute; bottom:-60px;
+      font-size:clamp(18px,3.5vw,28px);
+      opacity:.9;
+      animation:floatUp linear var(--dur) forwards;
+      filter:drop-shadow(0 4px 6px rgba(0,0,0,.2));
+    }
+    @keyframes floatUp{
+      0%   { transform: translateX(0) translateY(0) rotate(0deg); opacity:1; }
+      25%  { transform: translateX(-20px) translateY(-25vh) rotate(10deg); }
+      50%  { transform: translateX(15px) translateY(-55vh) rotate(-10deg); }
+      75%  { transform: translateX(-10px) translateY(-85vh) rotate(8deg); }
+      100% { transform: translateX(5px) translateY(-120vh) rotate(0deg); opacity:0; }
+    }
 
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    .card{
+      width:min(92%, 680px);
+      background: var(--white);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 32px);
+      text-align:center;
+      z-index:1;
+    }
 
-        button {
-            margin-top: 30px;
-            padding: 12px 25px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
+    h1{
+      margin:0 0 10px;
+      font-size: clamp(26px, 5vw, 38px);
+      color: var(--accent);
+    }
+    p{
+      margin:0 auto 14px;
+      max-width: 58ch;
+      font-size: clamp(15px, 3vw, 18px);
+      line-height: 1.7;
+      color: var(--text);
+    }
 
-        button:hover {
-            background-color: #388e3c;
-        }
+    /* Imagen más grande y flotando */
+    img{
+      width:65%;
+      max-width:300px;
+      height:auto;
+      margin: 16px auto 8px;
+      display:block;
+      border-radius: 14px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.2);
+      animation: floatImg 5s ease-in-out infinite;
+    }
+    @keyframes floatImg {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-8px); }
+    }
 
-        audio {
-            margin-top: 30px;
-            border-radius: 5px;
-        }
+    .actions{ margin-top: 14px; }
+    .btn{
+      appearance:none; border:0; cursor:pointer; text-decoration:none;
+      padding:12px 26px; border-radius:999px; font-weight:600; font-size:16px;
+      color:#fff; background: var(--accent);
+      box-shadow: 0 6px 14px rgba(0,0,0,.22);
+      transition: transform .18s ease, filter .18s ease;
+      display:inline-block;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.08); }
 
-        /* Ajustes para pantallas pequeñas */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 28px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            button {
-                padding: 12px 20px;
-                font-size: 16px;
-            }
-        }
-    </style>
+    audio{ display:none }
+  </style>
 </head>
 <body>
+  <!-- Corazones -->
+  <div class="hearts" id="hearts"></div>
+
+  <main class="card" role="main">
     <h1>¡Gracias por aceptar ser mi novia! 💖</h1>
-    <p>No puedo dejar de sonreír desde que me dijiste que sí. Quiero que sepas cuánto significas para mí. Estoy emocionado por este nuevo capítulo que vamos a comenzar juntos. Espero que podamos compartir momentos increíbles y seguir conociéndonos más y más. 
- 😘</p>
+    <p>
+      No puedo dejar de sonreír desde que me dijiste que sí.  
+      Quiero que sepas cuánto significas para mí.  
+      Estoy emocionado por este nuevo capítulo que vamos a comenzar juntos.  
+      Espero que podamos compartir momentos increíbles y seguir conociéndonos más y más. 😘
+    </p>
 
-    <!-- Imagen de agradecimiento -->
-    <img src="img/subi.webp" alt="Imagen de agradecimiento">
+    <img src="img/subi.webp" alt="Nos espera un camino hermoso juntos">
 
-    <!-- Enlace para regresar a la página principal -->
-    <a href="index.html">
-        <button>Volver a la página principal</button>
-    </a>
+    <div class="actions">
+      <a class="btn" href="index.html">Volver a la página principal</a>
+    </div>
 
-    <!-- Reproductor de audio -->
-    <audio id="audio" controls>
-        <source src="audio/siubite1.mp3" type="audio/mp3">
-        Tu navegador no soporta el formato de audio.
+    <audio id="bgm" preload="auto" autoplay loop muted playsinline>
+      <source src="audio/siubite1.mp3" type="audio/mp3">
     </audio>
+  </main>
+
+  <script>
+    const heartsBox = document.getElementById('hearts');
+    const audio = document.getElementById('bgm');
+
+    // Quita mute al cargar para que suene
+    window.addEventListener('load', ()=>{
+      audio.muted = false;
+      fadeIn(audio, 1500);
+    });
+
+    // Generar corazones flotantes
+    function spawnHearts(){
+      const sp=document.createElement('span');
+      sp.textContent=Math.random()<0.7?'❤':'💖';
+      sp.style.left=(Math.random()*100)+'vw';
+      sp.style.setProperty('--dur',(10+Math.random()*8)+'s');
+      sp.style.color = Math.random()<0.5 ? '#e91e63' : '#ec407a';
+      heartsBox.appendChild(sp);
+      sp.addEventListener('animationend',()=>sp.remove());
+    }
+    setInterval(spawnHearts,800);
+    spawnHearts();
+
+    // Fade-in volumen
+    function fadeIn(el, ms=1200){
+      const steps=24, step=1/steps, dt=ms/steps;
+      let v=0;
+      const t=setInterval(()=>{
+        v+=step; el.volume=Math.min(1,v);
+        if(el.volume>=1) clearInterval(t);
+      },dt);
+    }
+  </script>
 </body>
 </html>
 
